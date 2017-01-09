@@ -150,7 +150,7 @@ def handle_text_message(event):
     if text == Flist[0]:
         par()
         replySTD = '{FX} :\n{tSB} : {SB}\n{tCB} : {CB}\n{tSS} : {SS}\n{tCS} : {CS}'
-        USDreply = replySTD.fotmat(FX=USD[Tlist[0]], tSB=Tlist[1], SB=USD[Tlist[1]], tCB=Tlist[2], CB=USD[Tlist[2]],
+        USDreply = replySTD.format(FX=USD[Tlist[0]], tSB=Tlist[1], SB=USD[Tlist[1]], tCB=Tlist[2], CB=USD[Tlist[2]],
                                    tSS=Tlist[3], SS=USD[Tlist[3]], tCS=Tlist[4], CS=USD[Tlist[4]])
         replytxt=USDreply
     else:
