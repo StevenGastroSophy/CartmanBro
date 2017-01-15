@@ -238,14 +238,14 @@ def callback():
 def handle_text_message(event):
     text = event.message.text #message from user
 
-    replytxt='沒有變化'
+    
     
     compare(text)
-         
+    replytxt='沒有變化'     
          
     line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=str(replytxt)))
+            TextSendMessage(text=replytxt))
 
 import os
 if __name__ == "__main__":
