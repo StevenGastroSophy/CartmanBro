@@ -239,8 +239,6 @@ def handle_text_message(event):
     
     text = event.message.text #message from user
 
-    replytxt='Yo said that? '+text+'? Cartman braaaaaah!'
-
     compare(text)
                   
     line_bot_api.reply_message(
