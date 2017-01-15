@@ -129,7 +129,7 @@ def LANDpar():
     
     try:
 
-        url = 'https://ebank.landbank.com.tw/infor/infor.aspx?__eventtarget=querycurrency'
+        url = 'https://ebank.landbank.com.tw/infor/infor.aspx?__eventtarget=querycurrencyl'
         header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
 
         res=requests.get(url)       
@@ -218,7 +218,7 @@ def compare(inputmsg):
                         BESTretailer.append(j)
                 else:
                     pass
-            replytxtlist.append(' 與 '.join(BESTretailer)+'買 '+i+' 最便宜, 匯率為'+str(CS[i][BESTretailer[0]]))
+            replytxtlist.append(' 與 '.join(BESTretailer)+' 買 '+i+' 最便宜, 匯率為'+str(CS[i][BESTretailer[0]]))
         
     if len(disconnectlist) > 0:
         replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
