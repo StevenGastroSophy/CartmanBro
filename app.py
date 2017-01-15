@@ -210,7 +210,7 @@ def compare(inputmsg):
             for j in BANKlist:
                 if minrate == CS[i][j]:
                     BESTretailer.append(j)     
-            replytxtlist.append(' 跟 '.join(BESTretailer)+'買 '+i+' 最便宜, 匯率為'+str(CS[i][BESTretailer[0]]))
+            replytxtlist.append(' 與 '.join(BESTretailer)+' 買 '+i+' 最便宜, 匯率為'+str(CS[i][BESTretailer[0]]))
         replytxt='\n'.join(replytxtlist)
             
     except:
