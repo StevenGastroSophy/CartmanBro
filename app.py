@@ -214,7 +214,7 @@ def compare(inputmsg):
         replytxt=replytxtlist[0]
             
     except:
-        replytxt='mmmm...there must be some problem with the server...'
+        replytxt='Yo said that? '+text+'? /n Cartman braaaaaah!'
 
 @app.route("/callback", methods=['POST'])
 def callback():
