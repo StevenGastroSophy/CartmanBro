@@ -245,7 +245,7 @@ def handle_text_message(event):
          
     line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text=replytxt))
+            TextSendMessage(text=str(replytxt)))
 
 import os
 if __name__ == "__main__":
