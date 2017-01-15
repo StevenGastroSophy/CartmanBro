@@ -236,13 +236,11 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
+    global text
     text = event.message.text #message from user
 
-    
-    
     compare(text)
-         
-         
+    
     line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=replytxt))
