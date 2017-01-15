@@ -45,7 +45,7 @@ BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
               '土地銀行':['USD', 'JPY', 'GBP', 'HKD', 'AUD',
               'CAD', 'SGD', 'CHF', 'SEK', 'ZAR',
               'THB', 'NZD', 'EUR', 'CNY']}
-BANKlist=BANKcurrency.keys(
+BANKlist=BANKcurrency.keys()
 
 def MEGApar():
     
@@ -239,9 +239,9 @@ def handle_text_message(event):
     text = event.message.text #message from user
 
     
-    
+    replytxt='沒有變化'
     compare(text)
-    replytxt='沒有變化'     
+         
          
     line_bot_api.reply_message(
             event.reply_token,
