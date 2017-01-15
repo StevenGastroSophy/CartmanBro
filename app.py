@@ -193,7 +193,7 @@ def compare(inputmsg):
     compareCurrency=[]
     #用CURRENCY的key跟value去比對inputmsg裡面有沒有中英文幣別訊息,把幣別訊息加入compareCURRENCY裡面
     for i in list(CURRENCY.keys()):
-        if i in inputmsg or CURRENCY[i] in inputmsg:
+        if re.search(i, inputmsg, re.IGNORECASE) or CURRENCY[i] in inputmsg:
             compareCurrency.append(i)
     print(compareCurrency)
     #先確認compareCURRENCY裡面的幣別有沒有在各家銀行的幣別清單裡,再確認有無現金賣出價格,把現金賣出價格加入comparelist當中
