@@ -239,7 +239,7 @@ def handle_text_message(event):
     text = event.message.text #message from user
 
     
-    replytxt='沒有變化'
+    
     compare(text)
          
          
