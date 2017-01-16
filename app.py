@@ -253,8 +253,6 @@ def MAXMIN(compareCurrency, SBSSCBCS, EXTREME):
                 else:
                     pass
             replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+i+' '+SCSBCHT+'最高價, 匯率為'+str(SBSSCBCS[i][BESTretailer[0]]))
-        else:
-            pass
         
 
 def compare(inputmsg):
