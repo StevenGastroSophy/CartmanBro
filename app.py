@@ -48,7 +48,7 @@ BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
               'THB', 'NZD', 'EUR', 'CNY'],
               '第一銀行':['USD', 'GBP', 'HKD', 'AUD', 'SGD',
               'CHF', 'CAD', 'JPY', 'ZAR', 'SEK',
-              'THB', 'NZD', 'EUR', 'CNY', 'TRY']
+              'THB', 'NZD', 'EUR', 'CNY', 'TRY'],
               '國泰世華銀行':['USD', 'CNY', 'HKD', 'GBP', 'CHF',
                 'AUD', 'SGD', 'CAD', 'SEK', 'ZAR',
                 'JPY', 'DKK', 'THB', 'NZD', 'EUR',
