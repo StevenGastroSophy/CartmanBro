@@ -36,8 +36,6 @@ for i in range(0,len(list(CURRENCY.keys()))):
     CB[list(CURRENCY.keys())[i]]={}
     CS[list(CURRENCY.keys())[i]]={}
 
-print(SB) ; print(SS) ; print(CB) ; print(CS)
-print(len(SB)) ; print(len(SS)) ; print(len(CB)) ; print(len(CS))
 
 BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
               'CAD','SGD','ZAR','SEK','CHF',
