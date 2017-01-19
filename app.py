@@ -279,7 +279,7 @@ def CTBCpar():
         
 
         fxrate=[]
-        for i in range(0,len(CTBCcurrency)*4):
+        for i in range(0,len(BANKcurrency['中國信託商業銀行'])*4):
             if len(bs.findAll("td",{'class':'defaultDash column_text'})[i].get_text())>0:
                 fxrate.append(bs.findAll("td",{'class':'defaultDash column_text'})[i].get_text())
             else:
