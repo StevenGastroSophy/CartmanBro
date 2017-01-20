@@ -1,3 +1,5 @@
+from linebot import HttpClient
+HttpClient.DEFAULT_TIMEOUT=20
 import re
 import requests
 from bs4 import BeautifulSoup
