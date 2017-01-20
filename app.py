@@ -1,5 +1,5 @@
 from linebot import HttpClient
-HttpClient.DEFAULT_TIMEOUT=20
+HttpClient.DEFAULT_TIMEOUT=30
 import re
 import requests
 from bs4 import BeautifulSoup
@@ -388,11 +388,8 @@ def MAXMIN(compareCurrency, SBSSCBCS, EXTREME):
             
         comparelist=[]
         for j in BANKlist:
-            if j not in disconnectlist:
-                if i in BANKcurrency[j] and isinstance(SBSSCBCS[i][j], float):
-                    comparelist.append(SBSSCBCS[i][j])
-                elif i in BANKcurrency[j] and isinstance(SBSSCBCS[i][j], str):
-                    replytxtlist.append(str(j+'提供 '+i+', 但是沒有 '+i+' 的'+SCSBCHT+'資料'))
+            if j not in disconnectlist and i in BANKcurrency[j] and isinstance(SBSSCBCS[i][j], float):
+                comparelist.append(SBSSCBCS[i][j])
             else:
                 pass
         #從comparelist中選一個最小的數字,回傳幣別與銀行等訊息
