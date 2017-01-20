@@ -111,11 +111,6 @@ def MEGApar():
 
         strtext = resVtext.replace('__header_=0;','')
         strtext = strtext.replace('#','')
-        strtext = strtext.replace('col2','現金買匯')
-        strtext = strtext.replace('col3','即期賣匯')
-        strtext = strtext.replace('col0','幣別')
-        strtext = strtext.replace('col1','即期買匯')
-        strtext = strtext.replace('col4','現金賣匯')
 
         strtext = strtext.strip('\n')
         strlist = strtext.split(';')
