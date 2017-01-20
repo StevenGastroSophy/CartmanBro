@@ -127,7 +127,7 @@ def MEGApar():
         for i in range(0,len(strlist),5):
             strlist[i],strlist[i+1],strlist[i+2],strlist[i+3],strlist[i+4]=\
             strlist[i+2],strlist[i+3],strlist[i],strlist[i+1],strlist[i+4]
-        print(strlist)
+        #print(strlist)
 
         fxrate=[]
 
