@@ -441,8 +441,7 @@ def compare(inputmsg):
             compareCurrency.append(i)
     print(compareCurrency)
     
-    MAXMIN(compareCurrency, SB, 'MAX')
-    MAXMIN(compareCurrency, SS, 'MIN')
+
     MAXMIN(compareCurrency, CB, 'MAX')
     MAXMIN(compareCurrency, CS, 'MIN')
         
