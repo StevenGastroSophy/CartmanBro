@@ -60,7 +60,7 @@ BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
               'IDR', 'KRW', 'INR', 'VND', 'CNY'],
               '永豐銀行':['USD', 'JPY', 'HKD', 'EUR', 'GBP',
               'CHF', 'AUD', 'SGD', 'SEK', 'CAD',
-              'THB', 'ZAR', 'NZD', 'MOP', 'CNY'
+              'THB', 'ZAR', 'NZD', 'MOP', 'CNY',
               'CNH'],
               '凱基銀行':['USD', 'HKD', 'JPY', 'EUR', 'GBP',
               'AUD', 'CAD', 'CHF', 'NZD', 'SEK',
