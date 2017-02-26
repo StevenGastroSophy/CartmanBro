@@ -561,7 +561,7 @@ def handle_text_message(event):
     
     text = event.message.text #message from user
     
-    if re.search('HELP', inputmsg, re.IGNORECASE)==None:
+    if re.search('HELP', text, re.IGNORECASE)==None:
         showrate(text)
                   
         line_bot_api.reply_message(
