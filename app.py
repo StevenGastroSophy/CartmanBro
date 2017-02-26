@@ -492,7 +492,7 @@ def compare(inputmsg):
     replytxt='\n'.join(replytxtlist)
             
     if len(compareCurrency) == 0 :
-        replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+text+' 也許凱子知道那是什麼...'
+        replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
 
 def showrate(inputmsg):
     global replytxtlist, replytxt, disconnectlist
@@ -534,9 +534,9 @@ def showrate(inputmsg):
         replytxt='\n'.join(replytxtlist)
         
         if len(replytxt) == 0 and re.search('HELP', inputmsg, re.IGNORECASE)==None:
-            replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+text+' 也許凱子知道那是什麼...'
+            replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
     except:
-       replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+text+' 也許凱子知道那是什麼...'
+       replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -558,7 +558,7 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text_message(event):
-    global text
+    
     text = event.message.text #message from user
 
     showrate(text)
