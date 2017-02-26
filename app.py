@@ -533,7 +533,7 @@ def showrate(inputmsg):
             replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
         replytxt='\n'.join(replytxtlist)
         
-        if len(replytxt) == 0:
+        if len(replytxt) == 0 and re.search('HELP', inputmsg, re.IGNORECASE)==None:
             replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+text+' 也許凱子知道那是什麼...'
     except:
        replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+text+' 也許凱子知道那是什麼...'
