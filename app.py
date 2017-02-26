@@ -533,7 +533,7 @@ def showrate(inputmsg):
             replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
         replytxt='\n'.join(replytxtlist)
         
-        if len(replytxt) == 0 and re.search('HELP', inputmsg, re.IGNORECASE)==None:
+        if len(replytxt) == 0:
             replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
     except:
        replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
@@ -560,12 +560,15 @@ def callback():
 def handle_text_message(event):
     
     text = event.message.text #message from user
-
-    showrate(text)
+    
+    if re.search('HELP', inputmsg, re.IGNORECASE)==None:
+        showrate(text)
                   
-    line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=replytxt))
+        line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text=replytxt))
+    else:
+        pass
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',port=os.environ['PORT'])
