@@ -431,7 +431,7 @@ def showrate(inputmsg):
         print(BKset)
         for i in BKset:
             try:
-                BKpar[i]
+                BKpar[i]()
                 for j in compareCurrency:
                     if j in BANKcurrency[i]:
                         replytxtlist.append(i+' '+j+':\n'+
