@@ -120,6 +120,18 @@ def SCSB(BANKname, fxrate):
 
 class parsing:
     
+    def __init__(self):
+        
+        global BKpar
+        BKpar={'兆豐銀行' : self.MEGApar,
+               '土地銀行' : self.LANDpar,
+               '第一銀行' : self.FIRSTpar,
+               '國泰世華銀行' : self.CATHAYpar,
+               '台新銀行' : self.TAISHINpar,
+               '中國信託商業銀行' : self.CTBCpar,
+               '永豐銀行' : self.SINOPACpar,
+               '凱基銀行' : self.KGIpar}
+        
     def MEGApar(self):
         
         try:
@@ -398,17 +410,6 @@ class parsing:
         except :
             disconnectlist.append('凱基銀行')
 
-par=parsing()
-
-BKpar={'兆豐銀行' : par.MEGApar,
-       '土地銀行' : par.LANDpar,
-       '第一銀行' : par.FIRSTpar,
-       '國泰世華銀行' : par.CATHAYpar,
-       '台新銀行' : par.TAISHINpar,
-       '中國信託商業銀行' : par.CTBCpar,
-       '永豐銀行' : par.SINOPACpar,
-       '凱基銀行' : par.KGIpar}
-
 def showrate(inputmsg):
     global replytxtlist, replytxt, disconnectlist
     replytxtlist=[]
@@ -479,6 +480,7 @@ def handle_text_message(event):
     text = event.message.text #message from user
     
     if re.search('HELP', text, re.IGNORECASE)==None:
+        par=parsing()
         showrate(text)
                   
         line_bot_api.reply_message(
