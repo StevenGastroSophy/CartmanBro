@@ -77,26 +77,15 @@ BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
               '凱基銀行':['USD', 'HKD', 'JPY', 'EUR', 'GBP',
               'AUD', 'CAD', 'CHF', 'NZD', 'SEK',
               'SGD', 'CNH', 'THB', 'ZAR']}
-BANKlist=BANKcurrency.keys()
+BANKset=set(BANKcurrency.keys())
 
-BANKkeywords={'兆':['兆豐銀行'],
-              '豐':['兆豐銀行','永豐銀行'],
-              '土':['土地銀行'],
-              '地':['土地銀行'],
-              '第':['第一銀行'],
-              '一':['第一銀行'],
-              '國':['國泰世華銀行','中國信託商業銀行'],
-              '泰':['國泰世華銀行'],
-              '世':['國泰世華銀行'],
-              '華':['國泰世華銀行'],
-              '台':['台新銀行'],
-              '新':['台新銀行'],
-              '中':['中國信託商業銀行'],
-              '信':['中國信託商業銀行'],
-              '託':['中國信託商業銀行'],
-              '永':['永豐銀行'],
-              '凱':['凱基銀行'],
-              '基':['凱基銀行']}
+BANKkeywords={}
+for bk in BANKset:
+    for word in bk.strip("銀行").strip("商業"):
+        if word in BANKkeywords.keys():
+            BANKkeywords[word].add(bk)
+        else:
+            BANKkeywords[word]={bk}
 
 
 def SCSB(BANKname, fxrate):
@@ -413,24 +402,24 @@ class parsing:
 def showrate(inputmsg):
     global replytxtlist, replytxt, disconnectlist
     replytxtlist=[]
-    compareCurrency=[]
+    compareCurrency=set()
     disconnectlist=[]
-    BKset=set()
+    chooseBKset=set()
     try:
         textFX=inputmsg.split(' ')[0]
         textBK=inputmsg.split(' ')[1]
-        for i in list(CURRENCY.keys()):
+        for i in set(CURRENCY.keys()):
             if re.search(i, textFX, re.IGNORECASE) or CURRENCY[i] in textFX or (textFX in CURRENCY[i] and textFX != ('幣','元','圓')):
-                compareCurrency.append(i)
+                compareCurrency.add(i)
         print(compareCurrency)
         for i in range(0,len(textBK)):
             try:
                 for j in BANKkeywords[textBK[i]]:
-                    BKset.add(j)
+                    chooseBKset.add(j)
             except:
                 pass
-        print(BKset)
-        for i in BKset:
+        print(chooseBKset)
+        for i in chooseBKset:
             try:
                 BKpar[i]()
                 for j in compareCurrency:
@@ -447,7 +436,7 @@ def showrate(inputmsg):
         
         if len(disconnectlist) > 0:
             replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
-        replytxt='\n'.join(replytxtlist)
+        replytxt='\n'.join(replytxtlist)       
         
         if len(replytxt) == 0:
             replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
