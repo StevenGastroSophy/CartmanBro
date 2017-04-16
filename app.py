@@ -111,15 +111,14 @@ class parsing:
     
     def __init__(self):
         
-        global BKpar
-        BKpar={'兆豐銀行' : self.MEGApar,
-               '土地銀行' : self.LANDpar,
-               '第一銀行' : self.FIRSTpar,
-               '國泰世華銀行' : self.CATHAYpar,
-               '台新銀行' : self.TAISHINpar,
-               '中國信託商業銀行' : self.CTBCpar,
-               '永豐銀行' : self.SINOPACpar,
-               '凱基銀行' : self.KGIpar}
+        self.BKpar={'兆豐銀行' : self.MEGApar,
+                    '土地銀行' : self.LANDpar,
+                    '第一銀行' : self.FIRSTpar,
+                    '國泰世華銀行' : self.CATHAYpar,
+                    '台新銀行' : self.TAISHINpar,
+                    '中國信託商業銀行' : self.CTBCpar,
+                    '永豐銀行' : self.SINOPACpar,
+                    '凱基銀行' : self.KGIpar}
         
     def MEGApar(self):
         
@@ -399,7 +398,7 @@ class parsing:
         except :
             disconnectlist.append('凱基銀行')
 
-def showrate(inputmsg):
+def showrate(inputmsg, parsing):
     global replytxtlist, replytxt, disconnectlist
     replytxtlist=[]
     compareCurrency=set()
@@ -421,7 +420,7 @@ def showrate(inputmsg):
         print(chooseBKset)
         for i in chooseBKset:
             try:
-                BKpar[i]()
+                parsing.BKpar[i]()
                 for j in compareCurrency:
                     if j in BANKcurrency[i]:
                         replytxtlist.append(i+' '+j+':\n'+
@@ -470,7 +469,7 @@ def handle_text_message(event):
     
     if re.search('HELP', text, re.IGNORECASE)==None:
         par=parsing()
-        showrate(text)
+        showrate(text, par)
                   
         line_bot_api.reply_message(
                 event.reply_token,
