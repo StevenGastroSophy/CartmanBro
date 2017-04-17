@@ -494,3 +494,78 @@ for bk in BANKset:
 print('parsing complete in {time} seconds.'.format(time = time.time()-start))
 print('cannot connect ',disconnectlist)
 
+''''''''''''''''''''''''''''
+                
+def MAXMIN(compareCurrency, SBSSCBCS, EXTREME):
+    #根據 SBSSCBCS的參數來決定是 即期/現金 買/賣匯
+    if SBSSCBCS == SB:
+        SCSBCHT=Tlist[1]
+    elif SBSSCBCS == SS:
+        SCSBCHT=Tlist[2]
+    elif SBSSCBCS == CB:
+        SCSBCHT=Tlist[3]
+    elif SBSSCBCS == CS:
+        SCSBCHT=Tlist[4]
+    #確認compareCURRENCY裡面的幣別有沒有在各家銀行的幣別清單裡,再確認有無現金賣出價格,把現金賣出價格加入comparelist當中        
+    for i in compareCurrency:
+            
+        comparelist=[]
+        for j in BANKset:
+            if j not in disconnectlist and i in BANKcurrency[j] and isinstance(SBSSCBCS[i][j], float):
+                comparelist.append(SBSSCBCS[i][j])
+                
+            else:
+                pass
+        #從comparelist中選一個最小的數字,回傳幣別與銀行等訊息
+        if len(comparelist) > 0 and EXTREME == 'MIN':
+            minrate=min(comparelist)
+            
+            BESTretailer=[]
+            for j in BANKset:
+                if j not in disconnectlist and i in BANKcurrency[j]: 
+                    if minrate == SBSSCBCS[i][j]:
+                        BESTretailer.append(j)
+                else:
+                    pass
+            replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+i+' '+SCSBCHT+'最低價, 匯率為'+str(SBSSCBCS[i][BESTretailer[0]]))
+        elif len(comparelist) > 0 and EXTREME == 'MAX':
+            maxrate=max(comparelist)
+            
+            BESTretailer=[]
+            for j in BANKset:
+                if j not in disconnectlist and i in BANKcurrency[j]: 
+                    if maxrate == SBSSCBCS[i][j]:
+                        BESTretailer.append(j)
+                else:
+                    pass
+            replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+i+' '+SCSBCHT+'最高價, 匯率為'+str(SBSSCBCS[i][BESTretailer[0]]))
+             
+
+def compare(inputmsg):
+    global replytxtlist, replytxt, disconnectlist
+    disconnectlist=[]
+    
+    for key in BKpar.keys():
+        BKpar[key]()
+    
+    replytxtlist=[]
+    compareCurrency=[]
+    #用CURRENCY的key跟value去比對inputmsg裡面有沒有中英文幣別訊息,把幣別訊息加入compareCURRENCY裡面
+    for i in list(CURRENCY.keys()):
+        if re.search(i, inputmsg, re.IGNORECASE) or CURRENCY[i] in inputmsg or (inputmsg in CURRENCY[i] and inputmsg != ('幣','元','圓')):
+            compareCurrency.append(i)
+    print(compareCurrency)
+    
+    MAXMIN(compareCurrency, SB, 'MAX')
+    MAXMIN(compareCurrency, SS, 'MIN')
+    MAXMIN(compareCurrency, CB, 'MAX')
+    MAXMIN(compareCurrency, CS, 'MIN')
+        
+    if len(disconnectlist) > 0:
+        replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
+    replytxt='\n'.join(replytxtlist)
+            
+    if len(compareCurrency) == 0 :
+        replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+text+' 也許凱子知道那是什麼...'
+'''''''''''''''''''''''''''''
+
