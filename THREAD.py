@@ -475,6 +475,7 @@ class ThreadPar(Thread):
     def run(self):
         self.parsing.BKpar[self.bank]()
 
+disconnectlist={}
 parTHREAD=parsing()
 threads = [ThreadPar(parTHREAD,bk) for bk in BANKset]
 startTHREAD=time.time()
@@ -483,11 +484,13 @@ for thread in threads:
 for thread in threads:
     thread.join()
 print('parsing with Thread complete in {time} seconds.'.format(time = time.time()-startTHREAD))
+print('cannot connect ',disconnectlist)
 
-
+disconnectlist={}
 par=parsing()
 start=time.time()
 for bk in BANKset:
     par.BKpar[bk]()
 print('parsing complete in {time} seconds.'.format(time = time.time()-start))
+print('cannot connect ',disconnectlist)
 
