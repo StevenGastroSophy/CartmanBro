@@ -108,7 +108,7 @@ def SCSB(BANKname, fxrate):
             CS[BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+3]
 
 class parsing:
-    
+
     def __init__(self):
         
         self.BKpar={'兆豐銀行' : self.MEGApar,
@@ -123,6 +123,7 @@ class parsing:
     def MEGApar(self):
         
         try:
+            MEGAs=time.time()
         
             urlviewF = 'https://wwwfile.megabank.com.tw/rates/M001/viewF.asp'
             resF=requests.get(urlviewF)
@@ -167,6 +168,8 @@ class parsing:
             print(len(fxrate))
             
             SCSB('兆豐銀行', fxrate)
+
+            print('MEGA {}'.format(time.time()-MEGAs))
         
         except:
             disconnectlist.append('兆豐銀行')
@@ -177,6 +180,7 @@ class parsing:
     def LANDpar(self):
         
         try:
+            LANDs=time.time()
 
             url = 'https://ebank.landbank.com.tw/infor/infor.aspx?__eventtarget=querycurrency'
             header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
@@ -188,15 +192,18 @@ class parsing:
             bs=BeautifulSoup(restext, "html.parser")
         
             tableRATE=bs.find("table", {'class':'disptab'})
+            findcol=tableRATE.findAll("td",{'align':'Right'})
 
             fxrate=[]
         
             for i in range(0,len(BANKcurrency['土地銀行'])*4):
-                recordrate=tableRATE.findAll("td",{'align':'Right'})[i].get_text()
+                recordrate=findcol[i].get_text()
                 fxrate.append(recordrate)
             print(len(fxrate))
 
             SCSB('土地銀行', fxrate)
+            
+            print('LAND {}'.format(time.time()-LANDs))
         
 
         except :
@@ -205,6 +212,7 @@ class parsing:
     def FIRSTpar(self):
     
         try:
+            FIRSTs=time.time()
 
             url = 'https://ibank.firstbank.com.tw/NetBank/7/0201.html?sh=none'
             header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
@@ -232,6 +240,8 @@ class parsing:
             print(len(fxrate))
 
             SCSB('第一銀行', fxrate)
+
+            print('FIRST {}'.format(time.time()-FIRSTs))
         
         except :
             disconnectlist.append('第一銀行')
@@ -239,6 +249,7 @@ class parsing:
     def CATHAYpar(self):
     
         try:
+            CATHAYs=time.time()
 
             url = 'https://www.cathaybk.com.tw/cathaybk/exchange/currency-billboard.asp?page=current'
             header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
@@ -265,12 +276,16 @@ class parsing:
                     fxrate.append('--')
             print(len(fxrate))
             SCSB('國泰世華銀行', fxrate)
+            
+            print('CATHAY {}'.format(time.time()-CATHAYs))
+            
         except :
             disconnectlist.append('國泰世華銀行')
 
     def TAISHINpar(self):
     
         try:
+            TAISHINs=time.time()
 
             url = 'https://www.taishinbank.com.tw/TS/TS06/TS0605/TS060502/index.htm?urlPath1=TS02&urlPath2=TS0202'
             header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
@@ -280,13 +295,16 @@ class parsing:
             restext=res.text
 
             bs=BeautifulSoup(restext, "html.parser")
+            findcol=bs.findAll("td",{'align':'center'})
         
             fxrate=[]
             for i in range(0,len(BANKcurrency['台新銀行'])*4):
-                fxrate.append(bs.findAll("td",{'align':'center'})[i].get_text())
+                fxrate.append(findcol[i].get_text())
             print(len(fxrate))
         
             SCSB('台新銀行', fxrate)
+
+            print('TAISHIN {}'.format(time.time()-TAISHINs))
         
         except :
             disconnectlist.append('台新銀行')
@@ -294,6 +312,7 @@ class parsing:
     def CTBCpar(self):
     
         try:
+            CTBCs=time.time()
 
             url = 'https://www.ctbcbank.com/CTCBPortalWeb/toPage?id=TW_RB_CM_ebank_018001'
             header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
@@ -301,21 +320,23 @@ class parsing:
             res=requests.get(url)
         
             res.encoding='UTF-8'
-
+            
             restext=res.text
 
             bs=BeautifulSoup(restext, "html.parser")
-        
+            findcol=bs.findAll("td",{'class':'defaultDash column_text'})
 
             fxrate=[]
             for i in range(0,len(BANKcurrency['中國信託商業銀行'])*4):
-                if len(bs.findAll("td",{'class':'defaultDash column_text'})[i].get_text())>0:
-                    fxrate.append(bs.findAll("td",{'class':'defaultDash column_text'})[i].get_text())
+                if len(findcol[i].get_text())>0:
+                    fxrate.append(findcol[i].get_text())
                 else:
                     fxrate.append('--')
             print(len(fxrate))
 
             SCSB('中國信託商業銀行', fxrate)
+
+            print('CTBC {}'.format(time.time()-CTBCs))
         
         except :
             disconnectlist.append('中國信託商業銀行')
@@ -323,6 +344,7 @@ class parsing:
     def SINOPACpar(self):
     
         try:
+            SINOPACs=time.time()
 
             urlSPOT = 'https://mma.sinopac.com/ws/share/rate/ws_exchange.ashx?exchangeType=REMIT'
             urlCASH = 'https://mma.sinopac.com/ws/share/rate/ws_exchange.ashx?exchangeType=CASH'
@@ -365,6 +387,8 @@ class parsing:
             print(len(fxrate))
         
             SCSB('永豐銀行', fxrate)
+
+            print('SINOPAC {}'.format(time.time()-SINOPACs))
         
         except :
             disconnectlist.append('永豐銀行')
@@ -372,6 +396,7 @@ class parsing:
     def KGIpar(self):
     
         try:
+            KGIs=time.time()
 
             url = 'https://www.kgibank.com/T01/T0111/rate03.jsp'
             header = {"User-Agent": 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.99 Safari/537.36'}
@@ -383,22 +408,34 @@ class parsing:
             restext=res.text
 
             bs=BeautifulSoup(restext, "html.parser")
+            findcol=bs.findAll("td")
             fxrate=[]
-            for i in range(10,len(bs.findAll("td"))):
-                if len(bs.findAll("td")[i].get_text())>0 and i%10 in (2,3,4,5):
-                    fxrate.append(bs.findAll("td")[i].get_text())
-                elif len(bs.findAll("td")[i].get_text())==0:
+            for i in range(10,len(findcol)):
+                if len(findcol[i].get_text())>0 and i%10 in (2,3,4,5):
+                    fxrate.append(findcol[i].get_text())
+                elif len(findcol[i].get_text())==0:
                     fxrate.append('--')
                 else:
                     pass           
             print(len(fxrate))
             
             SCSB('凱基銀行', fxrate)
+
+            print('KGI {}'.format(time.time()-KGIs))
         
         except :
             disconnectlist.append('凱基銀行')
 
-def showrate(inputmsg, parsing):
+class ThreadPar(Thread):
+    def __init__(self,parsing,bank):
+        super().__init__()
+        self.parsing = parsing
+        self.bank = bank
+
+    def run(self):
+        self.parsing.BKpar[self.bank]()
+
+def showrate(inputmsg,parsing):
     global replytxtlist, replytxt, disconnectlist
     replytxtlist=[]
     compareCurrency=set()
@@ -407,35 +444,38 @@ def showrate(inputmsg, parsing):
     try:
         textFX=inputmsg.split(' ')[0]
         textBK=inputmsg.split(' ')[1]
-        for i in set(CURRENCY.keys()):
-            if re.search(i, textFX, re.IGNORECASE) or CURRENCY[i] in textFX or (textFX in CURRENCY[i] and textFX != ('幣','元','圓')):
-                compareCurrency.add(i)
+        for c in set(CURRENCY.keys()):
+            if re.search(c, textFX, re.IGNORECASE) or (CURRENCY[c] in textFX) or (textFX in CURRENCY[c] and textFX != ('幣','元','圓')):
+                compareCurrency.add(c)
         print(compareCurrency)
-        for i in range(0,len(textBK)):
+        for keyindex in range(0,len(textBK)):
             try:
-                for j in BANKkeywords[textBK[i]]:
-                    chooseBKset.add(j)
+                for bk in BANKkeywords[textBK[keyindex]]:
+                    chooseBKset.add(bk)
             except:
                 pass
         print(chooseBKset)
-        for i in chooseBKset:
-            try:
-                parsing.BKpar[i]()
-                for j in compareCurrency:
-                    if j in BANKcurrency[i]:
-                        replytxtlist.append(i+' '+j+':\n'+
-                                            Tlist[1]+' '+str(SB[j][i])+'\n'+
-                                            Tlist[2]+' '+str(SS[j][i])+'\n'+
-                                            Tlist[3]+' '+str(CB[j][i])+'\n'+
-                                            Tlist[4]+' '+str(CS[j][i])+'\n')
-                    else:
-                        replytxtlist.append(i+' 沒有提供 '+j)
-            except:
-                pass
         
+        threads = [ThreadPar(parsing,bk) for bk in chooseBKset]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+            
+        for bk in chooseBKset:
+            for c in compareCurrency:
+                if c in BANKcurrency[bk]:
+                    replytxtlist.append(bk+' '+c+':\n'+
+                                            Tlist[1]+' '+str(SB[c][bk])+'\n'+
+                                            Tlist[2]+' '+str(SS[c][bk])+'\n'+
+                                            Tlist[3]+' '+str(CB[c][bk])+'\n'+
+                                            Tlist[4]+' '+str(CS[c][bk])+'\n')
+                else:
+                    replytxtlist.append(bk+' 沒有提供 '+c)
+                    
         if len(disconnectlist) > 0:
             replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
-        replytxt='\n'.join(replytxtlist)       
+        replytxt='\n'.join(replytxtlist)                   
         
         if len(replytxt) == 0:
             replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
