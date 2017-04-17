@@ -14,6 +14,8 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+from threading import Thread
+import time
 
 app = Flask(__name__)
 
