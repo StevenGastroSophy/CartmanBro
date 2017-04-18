@@ -71,10 +71,8 @@ class parsing:
                            'AUD', 'CAD', 'CHF', 'NZD', 'SEK',
                            'SGD', 'CNH', 'THB', 'ZAR']}
 
-        self.BANKset=set(self.BANKcurrency.keys())
-
         self.BANKkeywords={}
-        for bk in self.BANKset:
+        for bk in set(self.BANKcurrency.keys()):
             for word in bk.strip("銀行").strip("商業"):
                 if word in self.BANKkeywords.keys():
                     self.BANKkeywords[word].add(bk)
@@ -448,20 +446,20 @@ class ReplyFX:
         self.parsing = parsing
         self.replytxtlist = []
 
-    def comparebyTDtype(self,compareCurrency,tdtypeEN,EXTREME):
+    def comparebyTDtype(self,compareCurrency,chooseBKset,tdtypeEN,EXTREME):
         tdtypeCHT=self.parsing.titleDICT[tdtypeEN][0]
         tdtype=self.parsing.titleDICT[tdtypeEN][1]
         
         #確認compareCURRENCY裡面的幣別有沒有在各家銀行的幣別清單裡,再確認有無現金賣出價格,把現金賣出價格加入comparelist當中        
         for currency in compareCurrency:
-            comparelist=[tdtype[currency][bk] for bk in self.parsing.BANKset if bk not in self.parsing.disconnectlist and (currency in self.parsing.BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
+            comparelist=[tdtype[currency][bk] for bk in chooseBKset if bk not in self.parsing.disconnectlist and (currency in self.parsing.BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
 
         #從comparelist中選一個最小的數字,回傳幣別與銀行等訊息
             if len(comparelist) > 0 and EXTREME == 'MIN':
                 minrate=min(comparelist)
                 
                 BESTretailer=[]
-                for bk in self.parsing.BANKset:
+                for bk in chooseBKset:
                     if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
                         if minrate == tdtype[currency][bk]:
                             BESTretailer.append(bk)
@@ -473,7 +471,7 @@ class ReplyFX:
                 maxrate=max(comparelist)
             
                 BESTretailer=[]
-                for bk in self.parsing.BANKset:
+                for bk in chooseBKset:
                     if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
                         if maxrate == tdtype[currency][bk]:
                             BESTretailer.append(bk)
@@ -522,10 +520,10 @@ class ReplyFX:
                     else:
                         pass
 
-            self.comparebyTDtype(compareCurrency,'SB','MAX')
-            self.comparebyTDtype(compareCurrency,'SS','MIN')
-            self.comparebyTDtype(compareCurrency,'CB','MAX')
-            self.comparebyTDtype(compareCurrency,'CS','MIN')
+            self.comparebyTDtype(compareCurrency,chooseBKset,'SB','MAX')
+            self.comparebyTDtype(compareCurrency,chooseBKset,'SS','MIN')
+            self.comparebyTDtype(compareCurrency,chooseBKset,'CB','MAX')
+            self.comparebyTDtype(compareCurrency,chooseBKset,'CS','MIN')
                     
             if len(self.parsing.disconnectlist) > 0:
                 self.replytxtlist.append(str(' 與 '.join(self.parsing.disconnectlist)+'無法連線'))
