@@ -32,7 +32,6 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token) #Your Channel Access Token
 handler = WebhookHandler(channel_secret) #Your Channel Secret
 
-Tlist=['幣別','即期買匯','即期賣匯','現金買匯','現金賣匯']
 SB={}
 SS={}
 CB={}
@@ -50,6 +49,11 @@ for i in range(0,len(list(CURRENCY.keys()))):
     CB[list(CURRENCY.keys())[i]]={}
     CS[list(CURRENCY.keys())[i]]={}
 
+titleDICT={'CURRENCY':'幣別',
+                 'SB':['即期買匯',SB],
+                 'SS':['即期賣匯',SS],
+                 'CB':['現金買匯',CB],
+                 'CS':['現金賣匯',CS]}
 
 BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
               'CAD','SGD','ZAR','SEK','CHF',
@@ -437,6 +441,48 @@ class ThreadPar(Thread):
     def run(self):
         self.parsing.BKpar[self.bank]()
 
+class compare:
+    def __init__(self,compareCurrency,titleDICT):
+        self.compareCurrency = compareCurrency
+        self.titleDICT = titleDICT
+
+    def comparebyTDtype(self,tdtypeEN,EXTREME):
+        
+        tdtypeCHT=self.titleDICT[tdtypeEN][0]
+        tdtype=self.titleDICT[tdtypeEN][1]
+        
+        #確認compareCURRENCY裡面的幣別有沒有在各家銀行的幣別清單裡,再確認有無現金賣出價格,把現金賣出價格加入comparelist當中        
+        for currency in self.compareCurrency:
+            
+            comparelist=[tdtype[currency][bk] for bk in BANKset if bk not in disconnectlist and (currency in BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
+            print('comparelist is',str(comparelist))
+
+        #從comparelist中選一個最小的數字,回傳幣別與銀行等訊息
+            if len(comparelist) > 0 and EXTREME == 'MIN':
+                minrate=min(comparelist)
+                
+                BESTretailer=[]
+                for bk in BANKset:
+                    if bk not in disconnectlist and currency in BANKcurrency[bk]: 
+                        if minrate == tdtype[currency][bk]:
+                            BESTretailer.append(bk)
+                    else:
+                        pass
+                replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最低價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
+                print('compare MAX ok')
+            elif len(comparelist) > 0 and EXTREME == 'MAX':
+                maxrate=max(comparelist)
+            
+                BESTretailer=[]
+                for bk in BANKset:
+                    if bk not in disconnectlist and currency in BANKcurrency[bk]: 
+                        if maxrate == tdtype[currency][bk]:
+                            BESTretailer.append(bk)
+                    else:
+                        pass
+                replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最高價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
+                print('compare MIN ok')
+
 def showrate(inputmsg,parsing):
     global replytxtlist, replytxt, disconnectlist
     replytxtlist=[]
@@ -466,19 +512,27 @@ def showrate(inputmsg,parsing):
             
         for bk in chooseBKset:
             for c in compareCurrency:
+                print(c)
                 if c in BANKcurrency[bk]:
                     replytxtlist.append(bk+' '+c+':\n'+
-                                            Tlist[1]+' '+str(SB[c][bk])+'\n'+
-                                            Tlist[2]+' '+str(SS[c][bk])+'\n'+
-                                            Tlist[3]+' '+str(CB[c][bk])+'\n'+
-                                            Tlist[4]+' '+str(CS[c][bk])+'\n')
+                                            titleDICT['SB'][0]+' '+str(SB[c][bk])+'\n'+
+                                            titleDICT['SS'][0]+' '+str(SS[c][bk])+'\n'+
+                                            titleDICT['CB'][0]+' '+str(CB[c][bk])+'\n'+
+                                            titleDICT['CS'][0]+' '+str(CS[c][bk])+'\n')
                 else:
                     replytxtlist.append(bk+' 沒有提供 '+c)
+
+        comp=compare(compareCurrency,titleDICT)
+        comp.comparebyTDtype('SB','MAX')
+        comp.comparebyTDtype('SS','MIN')
+        comp.comparebyTDtype('CB','MAX')
+        comp.comparebyTDtype('CS','MIN')
                     
         if len(disconnectlist) > 0:
             replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
-        replytxt='\n'.join(replytxtlist)                   
-        
+
+        replytxt='\n'.join(replytxtlist)
+
         if len(replytxt) == 0:
             replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
     except:
