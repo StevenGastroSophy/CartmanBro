@@ -32,90 +32,54 @@ if channel_access_token is None:
 line_bot_api = LineBotApi(channel_access_token) #Your Channel Access Token
 handler = WebhookHandler(channel_secret) #Your Channel Secret
 
-SB={}
-SS={}
-CB={}
-CS={}
-
-CURRENCY={'USD':'美金','HKD':'港幣','GBP':'英鎊','JPY':'日圓','AUD':'澳幣',
-          'CAD':'加拿大幣','SGD':'新加坡幣','ZAR':'南非幣','SEK':'瑞典幣','CHF':'瑞士法郎',
-          'THB':'泰銖','NZD':'紐西蘭幣','EUR':'歐元','KRW':'韓元','MYR':'馬來幣',
-          'IDR':'印尼幣','PHP':'菲國比索','MOP':'澳門幣','VND':'越南盾','CNY':'人民幣',
-          'TRY':'土耳其里拉','DKK':'丹麥克朗','INR':'印度盧比','CNH':'離岸人民幣'}
-
-for i in range(0,len(list(CURRENCY.keys()))):
-    SB[list(CURRENCY.keys())[i]]={}
-    SS[list(CURRENCY.keys())[i]]={}
-    CB[list(CURRENCY.keys())[i]]={}
-    CS[list(CURRENCY.keys())[i]]={}
-
-titleDICT={'CURRENCY':'幣別',
-                 'SB':['即期買匯',SB],
-                 'SS':['即期賣匯',SS],
-                 'CB':['現金買匯',CB],
-                 'CS':['現金賣匯',CS]}
-
-BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
-              'CAD','SGD','ZAR','SEK','CHF',
-              'THB','NZD','EUR','KRW','MYR',
-              'IDR','PHP','MOP','VND','CNY'],
-              '土地銀行':['USD', 'JPY', 'GBP', 'HKD', 'AUD',
-              'CAD', 'SGD', 'CHF', 'SEK', 'ZAR',
-              'THB', 'NZD', 'EUR', 'CNY'],
-              '第一銀行':['USD', 'GBP', 'HKD', 'AUD', 'SGD',
-              'CHF', 'CAD', 'JPY', 'ZAR', 'SEK',
-              'THB', 'NZD', 'EUR', 'CNY', 'TRY'],
-              '國泰世華銀行':['USD', 'CNY', 'HKD', 'GBP', 'CHF',
-              'AUD', 'SGD', 'CAD', 'SEK', 'ZAR',
-              'JPY', 'DKK', 'THB', 'NZD', 'EUR',
-              'TRY'],
-              '台新銀行':['AUD', 'CAD', 'CHF', 'CNY', 'EUR',
-              'GBP', 'HKD', 'JPY', 'NZD', 'SEK',
-              'SGD', 'THB', 'USD', 'ZAR'],
-              '中國信託商業銀行':['USD', 'JPY', 'HKD', 'GBP', 'CHF',
-              'SGD', 'ZAR', 'SEK', 'AUD', 'CAD',
-              'MYR', 'NZD', 'THB', 'PHP', 'EUR',
-              'IDR', 'KRW', 'INR', 'VND', 'CNY'],
-              '永豐銀行':['USD', 'JPY', 'HKD', 'EUR', 'GBP',
-              'CHF', 'AUD', 'SGD', 'SEK', 'CAD',
-              'THB', 'ZAR', 'NZD', 'MOP', 'CNY',
-              'CNH'],
-              '凱基銀行':['USD', 'HKD', 'JPY', 'EUR', 'GBP',
-              'AUD', 'CAD', 'CHF', 'NZD', 'SEK',
-              'SGD', 'CNH', 'THB', 'ZAR']}
-BANKset=set(BANKcurrency.keys())
-
-BANKkeywords={}
-for bk in BANKset:
-    for word in bk.strip("銀行").strip("商業"):
-        if word in BANKkeywords.keys():
-            BANKkeywords[word].add(bk)
-        else:
-            BANKkeywords[word]={bk}
-
-
-def SCSB(BANKname, fxrate):
-    for i in range(0,len(BANKcurrency[BANKname])*4,4):
-        try:
-            SB[BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i])
-        except ValueError:
-            SB[BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i]
-        try:
-            SS[BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i+1])
-        except ValueError:
-            SS[BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+1]
-        try:
-            CB[BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i+2])
-        except ValueError:
-            CB[BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+2]
-        try:
-            CS[BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i+3])
-        except ValueError:
-            CS[BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+3]
-
 class parsing:
 
     def __init__(self):
+
+        self.CURRENCY={'USD':'美金','HKD':'港幣','GBP':'英鎊','JPY':'日圓','AUD':'澳幣',
+                       'CAD':'加拿大幣','SGD':'新加坡幣','ZAR':'南非幣','SEK':'瑞典幣','CHF':'瑞士法郎',
+                       'THB':'泰銖','NZD':'紐西蘭幣','EUR':'歐元','KRW':'韓元','MYR':'馬來幣',
+                       'IDR':'印尼幣','PHP':'菲國比索','MOP':'澳門幣','VND':'越南盾','CNY':'人民幣',
+                       'TRY':'土耳其里拉','DKK':'丹麥克朗','INR':'印度盧比','CNH':'離岸人民幣'}
+
+        self.BANKcurrency={'兆豐銀行':['USD','HKD','GBP','JPY','AUD',
+                           'CAD','SGD','ZAR','SEK','CHF',
+                           'THB','NZD','EUR','KRW','MYR',
+                           'IDR','PHP','MOP','VND','CNY'],
+                           '土地銀行':['USD', 'JPY', 'GBP', 'HKD', 'AUD',
+                           'CAD', 'SGD', 'CHF', 'SEK', 'ZAR',
+                           'THB', 'NZD', 'EUR', 'CNY'],
+                           '第一銀行':['USD', 'GBP', 'HKD', 'AUD', 'SGD',
+                           'CHF', 'CAD', 'JPY', 'ZAR', 'SEK',
+                           'THB', 'NZD', 'EUR', 'CNY', 'TRY'],
+                           '國泰世華銀行':['USD', 'CNY', 'HKD', 'GBP', 'CHF',
+                           'AUD', 'SGD', 'CAD', 'SEK', 'ZAR',
+                           'JPY', 'DKK', 'THB', 'NZD', 'EUR',
+                           'TRY'],
+                           '台新銀行':['AUD', 'CAD', 'CHF', 'CNY', 'EUR',
+                           'GBP', 'HKD', 'JPY', 'NZD', 'SEK',
+                           'SGD', 'THB', 'USD', 'ZAR'],
+                           '中國信託商業銀行':['USD', 'JPY', 'HKD', 'GBP', 'CHF',
+                           'SGD', 'ZAR', 'SEK', 'AUD', 'CAD',
+                           'MYR', 'NZD', 'THB', 'PHP', 'EUR',
+                           'IDR', 'KRW', 'INR', 'VND', 'CNY'],
+                           '永豐銀行':['USD', 'JPY', 'HKD', 'EUR', 'GBP',
+                           'CHF', 'AUD', 'SGD', 'SEK', 'CAD',
+                           'THB', 'ZAR', 'NZD', 'MOP', 'CNY',
+                           'CNH'],
+                           '凱基銀行':['USD', 'HKD', 'JPY', 'EUR', 'GBP',
+                           'AUD', 'CAD', 'CHF', 'NZD', 'SEK',
+                           'SGD', 'CNH', 'THB', 'ZAR']}
+
+        self.BANKset=set(self.BANKcurrency.keys())
+
+        self.BANKkeywords={}
+        for bk in self.BANKset:
+            for word in bk.strip("銀行").strip("商業"):
+                if word in self.BANKkeywords.keys():
+                    self.BANKkeywords[word].add(bk)
+                else:
+                    self.BANKkeywords[word]={bk}        
         
         self.BKpar={'兆豐銀行' : self.MEGApar,
                     '土地銀行' : self.LANDpar,
@@ -125,6 +89,43 @@ class parsing:
                     '中國信託商業銀行' : self.CTBCpar,
                     '永豐銀行' : self.SINOPACpar,
                     '凱基銀行' : self.KGIpar}
+        self.SB={}
+        self.SS={}
+        self.CB={}
+        self.CS={}
+        
+        for i in range(0,len(set(self.CURRENCY.keys()))):
+            self.SB[list(self.CURRENCY.keys())[i]]={}
+            self.SS[list(self.CURRENCY.keys())[i]]={}
+            self.CB[list(self.CURRENCY.keys())[i]]={}
+            self.CS[list(self.CURRENCY.keys())[i]]={}
+
+        self.titleDICT={'CURRENCY':'幣別',
+                              'SB':['即期買匯',self.SB],
+                              'SS':['即期賣匯',self.SS],
+                              'CB':['現金買匯',self.CB],
+                              'CS':['現金賣匯',self.CS]}
+            
+        self.disconnectlist=[]
+            
+    def SCSB(self,BANKname,fxrate):
+        for i in range(0,len(self.BANKcurrency[BANKname])*4,4):
+            try:
+                self.SB[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i])
+            except ValueError:
+                self.SB[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i]
+            try:
+                self.SS[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i+1])
+            except ValueError:
+                self.SS[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+1]
+            try:
+                self.CB[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i+2])
+            except ValueError:
+                self.CB[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+2]
+            try:
+                self.CS[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=float(fxrate[i+3])
+            except ValueError:
+                self.CS[self.BANKcurrency[BANKname][int(i/4)]][BANKname]=fxrate[i+3]
         
     def MEGApar(self):
         
@@ -173,12 +174,12 @@ class parsing:
                 fxrate[i+1] , fxrate[i+2] = fxrate[i+2] , fxrate[i+1]
             print(len(fxrate))
             
-            SCSB('兆豐銀行', fxrate)
+            self.SCSB('兆豐銀行', fxrate)
 
             print('MEGA {}'.format(time.time()-MEGAs))
         
-        except:
-            disconnectlist.append('兆豐銀行')
+        except :
+            self.disconnectlist.append('兆豐銀行')
 
 
 
@@ -207,13 +208,13 @@ class parsing:
                 fxrate.append(recordrate)
             print(len(fxrate))
 
-            SCSB('土地銀行', fxrate)
+            self.SCSB('土地銀行', fxrate)
             
             print('LAND {}'.format(time.time()-LANDs))
         
 
         except :
-            disconnectlist.append('土地銀行')
+            self.disconnectlist.append('土地銀行')
 
     def FIRSTpar(self):
     
@@ -245,12 +246,12 @@ class parsing:
                     fxrate.append('--')
             print(len(fxrate))
 
-            SCSB('第一銀行', fxrate)
+            self.SCSB('第一銀行', fxrate)
 
             print('FIRST {}'.format(time.time()-FIRSTs))
         
         except :
-            disconnectlist.append('第一銀行')
+            self.disconnectlist.append('第一銀行')
 
     def CATHAYpar(self):
     
@@ -281,12 +282,12 @@ class parsing:
                     fxrate.append('--')
                     fxrate.append('--')
             print(len(fxrate))
-            SCSB('國泰世華銀行', fxrate)
+            self.SCSB('國泰世華銀行', fxrate)
             
             print('CATHAY {}'.format(time.time()-CATHAYs))
             
         except :
-            disconnectlist.append('國泰世華銀行')
+            self.disconnectlist.append('國泰世華銀行')
 
     def TAISHINpar(self):
     
@@ -308,12 +309,12 @@ class parsing:
                 fxrate.append(findcol[i].get_text())
             print(len(fxrate))
         
-            SCSB('台新銀行', fxrate)
+            self.SCSB('台新銀行', fxrate)
 
             print('TAISHIN {}'.format(time.time()-TAISHINs))
         
         except :
-            disconnectlist.append('台新銀行')
+            self.disconnectlist.append('台新銀行')
 
     def CTBCpar(self):
     
@@ -340,12 +341,12 @@ class parsing:
                     fxrate.append('--')
             print(len(fxrate))
 
-            SCSB('中國信託商業銀行', fxrate)
+            self.SCSB('中國信託商業銀行', fxrate)
 
             print('CTBC {}'.format(time.time()-CTBCs))
         
         except :
-            disconnectlist.append('中國信託商業銀行')
+            self.disconnectlist.append('中國信託商業銀行')
 
     def SINOPACpar(self):
     
@@ -392,12 +393,12 @@ class parsing:
                 fxrate.append(CASH[i+1])
             print(len(fxrate))
         
-            SCSB('永豐銀行', fxrate)
+            self.SCSB('永豐銀行', fxrate)
 
             print('SINOPAC {}'.format(time.time()-SINOPACs))
         
         except :
-            disconnectlist.append('永豐銀行')
+            self.disconnectlist.append('永豐銀行')
 
     def KGIpar(self):
     
@@ -425,12 +426,13 @@ class parsing:
                     pass           
             print(len(fxrate))
             
-            SCSB('凱基銀行', fxrate)
+            self.SCSB('凱基銀行', fxrate)
 
             print('KGI {}'.format(time.time()-KGIs))
         
         except :
-            disconnectlist.append('凱基銀行')
+            self.disconnectlist.append('凱基銀行')
+
 
 class ThreadPar(Thread):
     def __init__(self,parsing,bank):
@@ -441,102 +443,99 @@ class ThreadPar(Thread):
     def run(self):
         self.parsing.BKpar[self.bank]()
 
-class compare:
-    def __init__(self,compareCurrency,titleDICT):
-        self.compareCurrency = compareCurrency
-        self.titleDICT = titleDICT
+class ReplyFX:
+    def __init__(self,parsing):
+        self.parsing = parsing
+        self.replytxtlist = []
 
-    def comparebyTDtype(self,tdtypeEN,EXTREME):
-        
-        tdtypeCHT=self.titleDICT[tdtypeEN][0]
-        tdtype=self.titleDICT[tdtypeEN][1]
+    def comparebyTDtype(self,compareCurrency,tdtypeEN,EXTREME):
+        tdtypeCHT=self.parsing.titleDICT[tdtypeEN][0]
+        tdtype=self.parsing.titleDICT[tdtypeEN][1]
         
         #確認compareCURRENCY裡面的幣別有沒有在各家銀行的幣別清單裡,再確認有無現金賣出價格,把現金賣出價格加入comparelist當中        
-        for currency in self.compareCurrency:
-            
-            comparelist=[tdtype[currency][bk] for bk in BANKset if bk not in disconnectlist and (currency in BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
-            print('comparelist is',str(comparelist))
+        for currency in compareCurrency:
+            comparelist=[tdtype[currency][bk] for bk in self.parsing.BANKset if bk not in self.parsing.disconnectlist and (currency in self.parsing.BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
 
         #從comparelist中選一個最小的數字,回傳幣別與銀行等訊息
             if len(comparelist) > 0 and EXTREME == 'MIN':
                 minrate=min(comparelist)
                 
                 BESTretailer=[]
-                for bk in BANKset:
-                    if bk not in disconnectlist and currency in BANKcurrency[bk]: 
+                for bk in self.parsing.BANKset:
+                    if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
                         if minrate == tdtype[currency][bk]:
                             BESTretailer.append(bk)
                     else:
                         pass
-                replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最低價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
-                print('compare MAX ok')
+                self.replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最低價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
+                
             elif len(comparelist) > 0 and EXTREME == 'MAX':
                 maxrate=max(comparelist)
             
                 BESTretailer=[]
-                for bk in BANKset:
-                    if bk not in disconnectlist and currency in BANKcurrency[bk]: 
+                for bk in self.parsing.BANKset:
+                    if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
                         if maxrate == tdtype[currency][bk]:
                             BESTretailer.append(bk)
                     else:
                         pass
-                replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最高價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
-                print('compare MIN ok')
+                self.replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最高價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
+                
 
-def showrate(inputmsg,parsing):
-    global replytxtlist, replytxt, disconnectlist
-    replytxtlist=[]
-    compareCurrency=set()
-    disconnectlist=[]
-    chooseBKset=set()
-    try:
-        textFX=inputmsg.split(' ')[0]
-        textBK=inputmsg.split(' ')[1]
-        for c in set(CURRENCY.keys()):
-            if re.search(c, textFX, re.IGNORECASE) or (CURRENCY[c] in textFX) or (textFX in CURRENCY[c] and textFX != ('幣','元','圓')):
-                compareCurrency.add(c)
-        print(compareCurrency)
-        for keyindex in range(0,len(textBK)):
-            try:
-                for bk in BANKkeywords[textBK[keyindex]]:
-                    chooseBKset.add(bk)
-            except:
-                pass
-        print(chooseBKset)
+
+    def showrate(self,inputmsg):
+        print('disconnectlist is ',self.parsing.disconnectlist)
+        compareCurrency=set()
+        chooseBKset=set()
+        try:
+            textFX=inputmsg.split(' ')[0]
+            textBK=inputmsg.split(' ')[1]
+            for c in set(self.parsing.CURRENCY.keys()):
+                if re.search(c, textFX, re.IGNORECASE) or (self.parsing.CURRENCY[c] in textFX) or (textFX in self.parsing.CURRENCY[c] and textFX != ('幣','元','圓')):
+                    compareCurrency.add(c)
+            print(compareCurrency)
+            for keyindex in range(0,len(textBK)):
+                try:
+                    for bk in self.parsing.BANKkeywords[textBK[keyindex]]:
+                        chooseBKset.add(bk)
+                except:
+                    pass
+            print(chooseBKset)
         
-        threads = [ThreadPar(parsing,bk) for bk in chooseBKset]
-        for thread in threads:
-            thread.start()
-        for thread in threads:
-            thread.join()
+            threads = [ThreadPar(self.parsing,bk) for bk in chooseBKset]
+            for thread in threads:
+                thread.start()
+            for thread in threads:
+                thread.join()
             
-        for bk in chooseBKset:
-            for c in compareCurrency:
-                print(c)
-                if c in BANKcurrency[bk]:
-                    replytxtlist.append(bk+' '+c+':\n'+
-                                            titleDICT['SB'][0]+' '+str(SB[c][bk])+'\n'+
-                                            titleDICT['SS'][0]+' '+str(SS[c][bk])+'\n'+
-                                            titleDICT['CB'][0]+' '+str(CB[c][bk])+'\n'+
-                                            titleDICT['CS'][0]+' '+str(CS[c][bk])+'\n')
-                else:
-                    replytxtlist.append(bk+' 沒有提供 '+c)
+            for bk in chooseBKset:
+                for c in compareCurrency:
+                    print(c)
+                    if c in self.parsing.BANKcurrency[bk] and bk not in self.parsing.disconnectlist:
+                        self.replytxtlist.append(bk+' '+c+':\n'+
+                                            self.parsing.titleDICT['SB'][0]+' '+str(self.parsing.SB[c][bk])+'\n'+
+                                            self.parsing.titleDICT['SS'][0]+' '+str(self.parsing.SS[c][bk])+'\n'+
+                                            self.parsing.titleDICT['CB'][0]+' '+str(self.parsing.CB[c][bk])+'\n'+
+                                            self.parsing.titleDICT['CS'][0]+' '+str(self.parsing.CS[c][bk])+'\n')
+                    elif bk not in self.parsing.disconnectlist:
+                        self.replytxtlist.append(bk+' 沒有提供 '+c)
+                    else:
+                        pass
 
-        comp=compare(compareCurrency,titleDICT)
-        comp.comparebyTDtype('SB','MAX')
-        comp.comparebyTDtype('SS','MIN')
-        comp.comparebyTDtype('CB','MAX')
-        comp.comparebyTDtype('CS','MIN')
+            self.comparebyTDtype(compareCurrency,'SB','MAX')
+            self.comparebyTDtype(compareCurrency,'SS','MIN')
+            self.comparebyTDtype(compareCurrency,'CB','MAX')
+            self.comparebyTDtype(compareCurrency,'CS','MIN')
                     
-        if len(disconnectlist) > 0:
-            replytxtlist.append(str(' 與 '.join(disconnectlist)+'無法連線'))
+            if len(self.parsing.disconnectlist) > 0:
+                self.replytxtlist.append(str(' 與 '.join(self.parsing.disconnectlist)+'無法連線'))
+    
+            self.replytxt='\n'.join(self.replytxtlist)
 
-        replytxt='\n'.join(replytxtlist)
-
-        if len(replytxt) == 0:
-            replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
-    except:
-       replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
+            if len(self.replytxt) == 0:
+                self.replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...'
+        except :            
+            self.replytxt='阿ㄆㄧㄚˇ哥聽不懂 '+inputmsg+' 也許凱子知道那是什麼...' 
 
 
 
