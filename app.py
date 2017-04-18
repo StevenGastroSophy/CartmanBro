@@ -203,7 +203,7 @@ class parsing:
 
             fxrate=[]
         
-            for i in range(0,len(BANKcurrency['土地銀行'])*4):
+            for i in range(0,len(self.BANKcurrency['土地銀行'])*4):
                 recordrate=findcol[i].get_text()
                 fxrate.append(recordrate)
             print(len(fxrate))
@@ -305,7 +305,7 @@ class parsing:
             findcol=bs.findAll("td",{'align':'center'})
         
             fxrate=[]
-            for i in range(0,len(BANKcurrency['台新銀行'])*4):
+            for i in range(0,len(self.BANKcurrency['台新銀行'])*4):
                 fxrate.append(findcol[i].get_text())
             print(len(fxrate))
         
@@ -334,7 +334,7 @@ class parsing:
             findcol=bs.findAll("td",{'class':'defaultDash column_text'})
 
             fxrate=[]
-            for i in range(0,len(BANKcurrency['中國信託商業銀行'])*4):
+            for i in range(0,len(self.BANKcurrency['中國信託商業銀行'])*4):
                 if len(findcol[i].get_text())>0:
                     fxrate.append(findcol[i].get_text())
                 else:
