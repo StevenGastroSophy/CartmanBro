@@ -564,7 +564,8 @@ def handle_text_message(event):
     
     if re.search('HELP', text, re.IGNORECASE)==None:
         par=parsing()
-        showrate(text, par)
+        reply=ReplyFX(par)
+        reply.showrate(text)
                   
         line_bot_api.reply_message(
                 event.reply_token,
