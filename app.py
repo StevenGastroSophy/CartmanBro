@@ -445,46 +445,44 @@ class ReplyFX:
     def __init__(self,parsing):
         self.parsing = parsing
         self.replytxtlist = []
+        self.compareresultlist=[]
 
-    def comparebyTDtype(self,compareCurrency,chooseBKset,tdtypeEN,EXTREME):
+    def comparebyTDtype(self,currency,BKselectedSET,tdtypeEN,EXTREME):
         tdtypeCHT=self.parsing.titleDICT[tdtypeEN][0]
         tdtype=self.parsing.titleDICT[tdtypeEN][1]
         
         #確認compareCURRENCY裡面的幣別有沒有在各家銀行的幣別清單裡,再確認有無現金賣出價格,把現金賣出價格加入comparelist當中        
-        for currency in compareCurrency:
-            comparelist=[tdtype[currency][bk] for bk in chooseBKset if bk not in self.parsing.disconnectlist and (currency in self.parsing.BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
+        comparelist=[tdtype[currency][bk] for bk in BKselectedSET if bk not in self.parsing.disconnectlist and (currency in self.parsing.BANKcurrency[bk]) and isinstance(tdtype[currency][bk], float)]
 
         #從comparelist中選一個最小的數字,回傳幣別與銀行等訊息
-            if len(comparelist) > 0 and EXTREME == 'MIN':
-                minrate=min(comparelist)
-                
-                BESTretailer=[]
-                for bk in chooseBKset:
-                    if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
-                        if minrate == tdtype[currency][bk]:
-                            BESTretailer.append(bk)
-                    else:
-                        pass
-                self.replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最低價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
-                
-            elif len(comparelist) > 0 and EXTREME == 'MAX':
-                maxrate=max(comparelist)
+        if len(comparelist) > 0 and EXTREME == 'MIN':
+            minrate=min(comparelist)
+             
+            BESTretailer=[]
+            for bk in BKselectedSET:
+                if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
+                    if minrate == tdtype[currency][bk]:
+                        BESTretailer.append(bk)
+                else:
+                    pass
+            self.compareresultlist.append('{BANK}的 {CURRENCY} {tdtypeCHT}最低價, 匯率為{FXrate}'.format(BANK=' 與 '.join(BESTretailer),CURRENCY=currency,tdtypeCHT=tdtypeCHT,FXrate=tdtype[currency][BESTretailer[0]]))
+        elif len(comparelist) > 0 and EXTREME == 'MAX':
+            maxrate=max(comparelist)
             
-                BESTretailer=[]
-                for bk in chooseBKset:
-                    if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
-                        if maxrate == tdtype[currency][bk]:
-                            BESTretailer.append(bk)
-                    else:
-                        pass
-                self.replytxtlist.append(' 與 '.join(BESTretailer)+'的 '+currency+' '+tdtypeCHT+'最高價, 匯率為'+str(tdtype[currency][BESTretailer[0]]))
-                
+            BESTretailer=[]
+            for bk in BKselectedSET:
+                if bk not in self.parsing.disconnectlist and currency in self.parsing.BANKcurrency[bk]: 
+                    if maxrate == tdtype[currency][bk]:
+                        BESTretailer.append(bk)
+                else:
+                     pass
+            self.compareresultlist.append('{BANK}的 {CURRENCY} {tdtypeCHT}最高價, 匯率為{FXrate}'.format(BANK=' 與 '.join(BESTretailer),CURRENCY=currency,tdtypeCHT=tdtypeCHT,FXrate=tdtype[currency][BESTretailer[0]]))    
 
 
     def showrate(self,inputmsg):
         print('disconnectlist is ',self.parsing.disconnectlist)
         compareCurrency=set()
-        chooseBKset=set()
+        BKselectedSET=set()
         try:
             textFX=inputmsg.split(' ')[0]
             textBK=inputmsg.split(' ')[1]
@@ -495,18 +493,18 @@ class ReplyFX:
             for keyindex in range(0,len(textBK)):
                 try:
                     for bk in self.parsing.BANKkeywords[textBK[keyindex]]:
-                        chooseBKset.add(bk)
+                        BKselectedSET.add(bk)
                 except:
                     pass
-            print(chooseBKset)
+            print(BKselectedSET)
         
-            threads = [ThreadPar(self.parsing,bk) for bk in chooseBKset]
+            threads = [ThreadPar(self.parsing,bk) for bk in BKselectedSET]
             for thread in threads:
                 thread.start()
             for thread in threads:
                 thread.join()
             
-            for bk in chooseBKset:
+            for bk in BKselectedSET:
                 for c in compareCurrency:
                     print(c)
                     if c in self.parsing.BANKcurrency[bk] and bk not in self.parsing.disconnectlist:
@@ -520,13 +518,17 @@ class ReplyFX:
                     else:
                         pass
 
-            self.comparebyTDtype(compareCurrency,chooseBKset,'SB','MAX')
-            self.comparebyTDtype(compareCurrency,chooseBKset,'SS','MIN')
-            self.comparebyTDtype(compareCurrency,chooseBKset,'CB','MAX')
-            self.comparebyTDtype(compareCurrency,chooseBKset,'CS','MIN')
+            for currency in compareCurrency:
+                self.comparebyTDtype(currency,BKselectedSET,'SB','MAX')
+                self.comparebyTDtype(currency,BKselectedSET,'SS','MIN')
+                self.comparebyTDtype(currency,BKselectedSET,'CB','MAX')
+                self.comparebyTDtype(currency,BKselectedSET,'CS','MIN')
+            
+            self.replytxtlist.extend(self.compareresultlist)
+                
                     
             if len(self.parsing.disconnectlist) > 0:
-                self.replytxtlist.append(str(' 與 '.join(self.parsing.disconnectlist)+'無法連線'))
+                self.replytxtlist.append('{} 無法連線'.format(' 與 '.join(self.parsing.disconnectlist)))
     
             self.replytxt='\n'.join(self.replytxtlist)
 
