@@ -518,13 +518,14 @@ class ReplyFX:
                     else:
                         pass
 
-            for currency in compareCurrency:
-                self.comparebyTDtype(currency,BKselectedSET,'SB','MAX')
-                self.comparebyTDtype(currency,BKselectedSET,'SS','MIN')
-                self.comparebyTDtype(currency,BKselectedSET,'CB','MAX')
-                self.comparebyTDtype(currency,BKselectedSET,'CS','MIN')
+            if len(BKselectedSET) >1:   
+                for currency in compareCurrency:
+                    self.comparebyTDtype(currency,BKselectedSET,'SB','MAX')
+                    self.comparebyTDtype(currency,BKselectedSET,'SS','MIN')
+                    self.comparebyTDtype(currency,BKselectedSET,'CB','MAX')
+                    self.comparebyTDtype(currency,BKselectedSET,'CS','MIN')
             
-            self.replytxtlist.extend(self.compareresultlist)
+                self.replytxtlist.extend(self.compareresultlist)
                 
                     
             if len(self.parsing.disconnectlist) > 0:
