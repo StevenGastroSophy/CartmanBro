@@ -337,7 +337,10 @@ class parsing:
                     fxrate.append(findcol[i].get_text())
                 else:
                     fxrate.append('--')
-            print(len(fxrate))
+            
+            for i in range(0,len(fxrate),4):
+                fxrate[i] , fxrate[i+1] , fxrate[i+2] , fxrate[i+3] = fxrate[i+2] , fxrate[i+3] , fxrate[i] , fxrate[i+1]
+            print(len(fxrate)) 
 
             self.SCSB('中國信託商業銀行', fxrate)
 
