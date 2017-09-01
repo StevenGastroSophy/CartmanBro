@@ -234,12 +234,12 @@ class parsing:
         
             fxrate=[]
         
-            for i in range(0,44):
+            for i in range(0,46):
                 recordrate=tableRATE[i].get_text()
                 recordrate=recordrate.strip('\r\n                \r\n                \r\n                    ')
             
                 fxrate.append(recordrate)
-                if i in (13,15,17,27,29,31,33,43):
+                if i in (17,19,29,31,33,35,45):
                     fxrate.append('--')
                     fxrate.append('--')
             print(len(fxrate))
