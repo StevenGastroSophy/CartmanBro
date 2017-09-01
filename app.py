@@ -168,6 +168,9 @@ class parsing:
             for i in range(0,100):
                 if i%5 !=0:
                     fxrate.append(strlist[i].split('=')[1])
+            for i in range(0,80,4):
+                fxrate[i+1] , fxrate[i+2] = fxrate[i+2] , fxrate[i+1]
+                fxrate[i] , fxrate[i+1] = fxrate[i+1] , fxrate[i]
             print(len(fxrate))
             
             self.SCSB('兆豐銀行', fxrate)
