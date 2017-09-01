@@ -267,7 +267,7 @@ class parsing:
 
             bs=BeautifulSoup(restext, "html.parser")
         
-            tableRATE=bs.find("table",{'class':'table_rate'}).get_text()
+            tableRATE=bs.find("table",{'class':'table-rate'}).get_text()
             recordrate=[]
             for i in tableRATE.split():
                 try:
