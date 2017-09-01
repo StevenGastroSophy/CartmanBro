@@ -171,6 +171,7 @@ class parsing:
             for i in range(0,80,4):
                 fxrate[i+1] , fxrate[i+2] = fxrate[i+2] , fxrate[i+1]
                 fxrate[i] , fxrate[i+1] = fxrate[i+1] , fxrate[i]
+                fxrate[i+2] , fxrate[i+3] = fxrate[i+3] , fxrate[i+2]
             print(len(fxrate))
             
             self.SCSB('兆豐銀行', fxrate)
