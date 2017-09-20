@@ -1,2 +1,1 @@
-# masakikihara
-linebot
+一個可以查詢8家銀行匯率的LineBot，輸入幣別和銀行；輸出匯率及比較結果。
